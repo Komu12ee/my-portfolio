@@ -1,11 +1,12 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: "/my-portfolio/",   // ⭐ IMPORTANT: matches your GitHub repo name
+  base: mode === "production" ? "/my-portfolio/" : "/",
+  // base: "",   // FIXED for local dev
 
   server: {
     host: "::",
@@ -20,4 +21,3 @@ export default defineConfig(({ mode }) => ({
     },
   },
 }));
-
