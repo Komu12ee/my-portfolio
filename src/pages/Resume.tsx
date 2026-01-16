@@ -13,7 +13,7 @@ const Resume = () => {
 
   const tools = [
     "PowerBI", "Tableau", "Plotly", "Jupyter", "VS Code",
-    "Figma", "Photoshop", "Illustrator", "Adobe XD"
+    "Figma", "Illustrator", "Adobe XD"
   ];
 
   return (
