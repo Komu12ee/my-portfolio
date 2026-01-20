@@ -23,8 +23,8 @@ const Projects = () => {
       tags: ["Python", "ML", "Data Analysis", "Predictive Modeling"],
     },
     {
-      title: "Visodream Forum Development",
-      description: "Developed a new forum platform for the Visodream community with modern features and user-friendly interface.",
+      title: "Edge–Cloud AI Traffic Monitoring System",
+      description: "It is a real-time Edge AI traffic analytics system that performs high-speed vehicle detection and traffic analysis on an edge GPU, while asynchronously streaming lightweight analytics to a cloud-hosted backend for visualization.",
       image: primodayProject,
       tags: ["Web Development", "Community Platform", "Full Stack"],
     },
