@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Send } from "lucide-react";
+import { Github, Linkedin, Mail, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -75,6 +75,44 @@ const Contact = () => {
                       className="text-primary hover:underline"
                     >
                       sahukomendra721@gmail.com
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2">
+                <CardContent className="pt-6 space-y-4">
+                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Linkedin className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-display font-semibold mb-2">Connect on LinkedIn</h3>
+                    <a
+                      href="https://www.linkedin.com/in/komendrasahu"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      linkedin.com/in/komendrasahu
+                    </a>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2">
+                <CardContent className="pt-6 space-y-4">
+                  <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Github className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-display font-semibold mb-2">View my GitHub</h3>
+                    <a
+                      href="https://github.com/Komu12ee"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      github.com/Komu12ee
                     </a>
                   </div>
                 </CardContent>

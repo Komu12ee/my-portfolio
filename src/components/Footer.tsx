@@ -1,11 +1,10 @@
-import { Github, Linkedin, Instagram, Mail } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 const Footer = () => {
   const socialLinks = [
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: Github, href: "https://github.com", label: "GitHub" },
-    { icon: Mail, href: "https://medium.com", label: "Medium" },
-    { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/komendrasahu", label: "LinkedIn", external: true },
+    { icon: Github, href: "https://github.com/Komu12ee", label: "GitHub", external: true },
+    { icon: Mail, href: "mailto:sahukomendra721@gmail.com", label: "Email", external: false },
   ];
 
   return (
@@ -21,8 +20,8 @@ const Footer = () => {
               <a
                 key={social.label}
                 href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                target={social.external ? "_blank" : undefined}
+                rel={social.external ? "noopener noreferrer" : undefined}
                 className="text-muted-foreground hover:text-primary transition-colors"
                 aria-label={social.label}
               >

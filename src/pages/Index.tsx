@@ -9,22 +9,37 @@ import profileImage from "@/assets/profile.jpg";
 const Index = () => {
   const services = [
     {
-      title: "Machine Learning",
-      description: "Predictive modeling, NLP & text analysis, recommendation systems, and model evaluation & optimization.",
+      title: "GenAI & RAG Chatbot Development",
+      description: "Building retrieval-augmented chatbots that answer from your data - accurately, with citations.",
       icon: Brain,
-      features: ["Predictive modeling", "NLP & text analysis", "Recommendation systems", "Model optimization & evaluation"],
+      features: [
+        "Custom RAG pipelines (LangChain, vector search)",
+        "Document/PDF-based Q&A systems",
+        "LLM API integration & orchestration",
+        "Citation-backed, hallucination-resistant responses",
+      ],
     },
     {
-      title: "MLOps",
-      description: "CI/CD pipelines, model monitoring, versioning, cloud deployment, and automated data pipelines.",
-      icon: Workflow,
-      features: ["CI/CD pipelines", "Model monitoring", "Versioning", "Cloud deployment", "Automated data pipelines"],
-    },
-    {
-      title: "Data Visualization",
-      description: "Dashboards, KPI monitoring, business analytics, and data storytelling.",
+      title: "Applied Machine Learning",
+      description: "Turning messy data into working models - segmentation, recommendation, and text analytics.",
       icon: BarChart3,
-      features: ["Dashboards (PowerBI/Tableau/Plotly)", "KPI monitoring", "Business analytics", "Data storytelling"],
+      features: [
+        "Recommendation systems (collaborative filtering)",
+        "Clustering & customer/learner segmentation",
+        "NLP & text complexity analysis",
+        "Model evaluation & optimization",
+      ],
+    },
+    {
+      title: "Backend & System Integration for AI Apps",
+      description: "The engineering that makes an AI system usable, not just a notebook demo.",
+      icon: Workflow,
+      features: [
+        "API development (Flask, FastAPI)",
+        "Vector database integration (Qdrant)",
+        "PostgreSQL-backed data pipelines",
+        "End-to-end deployment (prototype to working app)",
+      ],
     },
   ];
 
@@ -44,14 +59,14 @@ const Index = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6 animate-fade-in">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-tight">
-                I design elegant{" "}
-                <span className="text-gradient glow-text">ML & MLOps</span>{" "}
-                solutions that just work.
+                I build{" "}
+                <span className="text-gradient glow-text">GenAI systems</span>{" "}
+                 that retrieve, reason, and cite — not just generate.
               </h1>
               <div className="space-y-2 text-muted-foreground">
                 <p className="text-lg font-medium text-foreground">Komendra Sahu — CM-IT Fellow, IIIT Naya Raipur</p>
                 <p className="text-base">M.Tech in Data Science & Artificial Intelligence</p>
-                <p className="text-base">ML Engineer • MLOps Developer • Data-Driven Problem Solver</p>
+                <p className="text-base">Generative AI • ML Engineer • Data-Driven Problem Solver</p>
               </div>
               <div className="flex flex-wrap gap-4 pt-4">
                 <Link to="/projects">
@@ -93,18 +108,17 @@ const Index = () => {
             <h2 className="text-3xl md:text-4xl font-display font-bold">About Me</h2>
             <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
               <p>
-                I'm a <strong className="text-foreground">CM-IT Fellow</strong> currently pursuing M.Tech in Data Science and Artificial Intelligence at IIIT Naya Raipur. 
-                I'm deeply passionate about transforming real-life problems into intelligent, data-driven solutions.
+                I'm a <strong className="text-foreground">CM-IT Fellow</strong> 
+                pursuing an M.Tech in Data Science & AI at IIIT Naya Raipur.
               </p>
               <p>
-                I love working with real-world datasets, building end-to-end predictive and classification models, and taking them all the way to deployment 
-                — with clean, modular, and scalable code. My current focus is on mastering <strong className="text-foreground">MLOps</strong> and creating AI systems 
-                that can live and evolve beyond prototypes.
+                 I build GenAI and RAG-based chatbot systems that turn messy, real-world data into reliable, cited answers — most notably a legal-intelligence chatbot deployed for the Chhattisgarh government, handling RTI (Right to Information) workflows end-to-end.
+                I work across the full pipeline: data ingestion and retrieval (Qdrant, vector search), backend systems (Python, Flask, FastAPI, PostgreSQL), and LLM orchestration (LangChain, RAG Fusion). My research background — published in IEEE Xplore — means I care about why a retrieval system works, not just whether it does.
               </p>
-              <p>
+              {/* <p>
                 Technically, I work with tools like <strong className="text-foreground">Python, Pandas, NumPy, Scikit-learn, TensorFlow, Flask, Docker, Kubernetes, MLflow, DVC, AWS, and Seldon</strong>, 
                 blending data science with modern deployment practices.
-              </p>
+              </p> */}
               <p>
                 Beyond coding, I'm a district-level basketball player, and I believe the game has taught me <strong className="text-foreground">teamwork, discipline, and leadership</strong> 
                 — qualities I bring into every project.
