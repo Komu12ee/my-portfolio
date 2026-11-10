@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Github, Linkedin, Mail, Users, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 import { usePortfolio } from "@/context/PortfolioContext";
 
 const Footer = () => {
@@ -87,8 +88,16 @@ const Footer = () => {
             <p className="text-sm font-medium text-foreground">
               © {new Date().getFullYear()} {personalInfo.name}
             </p>
-            <p className="text-xs text-muted-foreground">
-              {personalInfo.roles}
+            <p className="text-xs text-muted-foreground flex items-center gap-2">
+              <span>{personalInfo.roles}</span>
+              <span>•</span>
+              <Link
+                to="/admin"
+                className="opacity-50 hover:opacity-100 hover:text-primary transition-opacity font-medium underline underline-offset-2"
+                title="Open Portfolio Admin Dashboard"
+              >
+                Admin
+              </Link>
             </p>
           </div>
 
