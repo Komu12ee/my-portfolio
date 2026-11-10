@@ -1,5 +1,9 @@
+import { useState } from "react";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ExternalLink, Github, Play } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import titanicProject from "@/assets/titanic-project.jpg";
@@ -8,86 +12,147 @@ import primodayProject from "@/assets/primoday-project.jpg";
 import nextliteProject from "@/assets/nextlite-project.jpg";
 import syncnowProject from "@/assets/syncnow-project.jpg";
 
+const categories = ["All", "AI & GenAI", "Machine Learning", "Engineering & Web"] as const;
+
+const getImageForProject = (title: string) => {
+  const lower = title.toLowerCase();
+  if (lower.includes("titanic")) return titanicProject;
+  if (lower.includes("maths") || lower.includes("financial") || lower.includes("ccti")) return mathsPredictor;
+  if (lower.includes("nextlite") || lower.includes("rag")) return nextliteProject;
+  if (lower.includes("syncnow") || lower.includes("seva") || lower.includes("giving") || lower.includes("daan"))
+    return syncnowProject;
+  return primodayProject;
+};
+
 const Projects = () => {
-  const projects = [
-    {
-      title: "Titanic Survival Predictor",
-      description: "Predicts the probability of survival of Titanic passengers using machine learning, based on features like age, gender, class, and family aboard. Built with Python, scikit-learn, and Flask for a web interface.",
-      image: titanicProject,
-      tags: ["Python", "Scikit-learn", "Flask", "Machine Learning"],
-    },
-    {
-      title: "Maths Marks Predictor",
-      description: "Student marks prediction project using machine learning algorithms to forecast student performance based on various academic and demographic factors.",
-      image: mathsPredictor,
-      tags: ["Python", "ML", "Data Analysis", "Predictive Modeling"],
-    },
-    {
-      title: "Edge–Cloud AI Traffic Monitoring System",
-      description: "It is a real-time Edge AI traffic analytics system that performs high-speed vehicle detection and traffic analysis on an edge GPU, while asynchronously streaming lightweight analytics to a cloud-hosted backend for visualization.",
-      image: primodayProject,
-      tags: ["Web Development", "Community Platform", "Full Stack"],
-    },
-    {
-      title: "Primoday Corporate Website Redesign",
-      description: "Complete redesign of their corporate website and platform with modern UI/UX principles and enhanced functionality.",
-      image: primodayProject,
-      tags: ["Web Design", "Corporate", "UI/UX", "Redesign"],
-    },
-    {
-      title: "Nextlite Video Editing Web App",
-      description: "Created a custom video editing and upload web application with intuitive interface and powerful editing capabilities.",
-      image: nextliteProject,
-      tags: ["Web App", "Video Editing", "React", "Media Processing"],
-    },
-    {
-      title: "SyncNow Corporate Websites",
-      description: "Developed multiple corporate websites with focus on performance, SEO, and modern design principles.",
-      image: syncnowProject,
-      tags: ["Corporate", "Web Development", "SEO", "Performance"],
-    },
-  ];
+  const { data } = usePortfolio();
+  const allProjects = data.projects;
+  const [activeFilter, setActiveFilter] = useState<string>("All");
+
+  const filteredProjects =
+    activeFilter === "All"
+      ? allProjects
+      : allProjects.filter((p) => p.category === activeFilter);
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <section className="section-padding pt-32">
         <div className="container-custom">
-          <div className="text-center space-y-4 mb-12 animate-fade-in">
-            <h1 className="text-4xl md:text-5xl font-display font-bold">Projects</h1>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Listed below are some of the most representative projects I've worked on. 
-              They range from basic to advanced Machine Learning and Deep Learning projects.
+          <div className="text-center space-y-4 mb-10 animate-fade-in">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Portfolio</p>
+            <h1 className="text-4xl md:text-5xl font-display font-bold">Featured Projects</h1>
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
+              Production AI platforms for government departments, research-driven machine learning models, and scalable full-stack web applications.
             </p>
+
+            {/* Filter Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
+              {categories.map((cat) => (
+                <Button
+                  key={cat}
+                  variant={activeFilter === cat ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveFilter(cat)}
+                  className="rounded-full px-4 text-xs font-medium"
+                >
+                  {cat}
+                </Button>
+              ))}
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
+            {filteredProjects.map((project, index) => (
               <Card
-                key={project.title}
-                className="overflow-hidden border-2 hover:border-primary transition-all duration-300 hover:shadow-xl group animate-fade-in-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                key={project.id || project.title}
+                className="overflow-hidden border-2 hover:border-primary transition-all duration-300 hover:shadow-xl group animate-fade-in-up flex flex-col justify-between"
+                style={{ animationDelay: `${index * 0.05}s` }}
               >
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div>
+                  <div className="relative h-48 overflow-hidden bg-muted">
+                    <img
+                      src={project.image || getImageForProject(project.title)}
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+                    <div className="absolute top-3 right-3 flex gap-1.5">
+                      {project.featured && (
+                        <Badge className="bg-primary text-primary-foreground text-xs shadow-sm">
+                          Featured
+                        </Badge>
+                      )}
+                    </div>
+                    {project.highlight && (
+                      <div className="absolute bottom-3 left-3 right-3">
+                        <span className="text-[11px] font-semibold text-primary bg-background/90 backdrop-blur-sm px-2.5 py-1 rounded-md border border-primary/20 shadow-sm inline-block">
+                          {project.highlight}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <CardContent className="pt-5 space-y-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-lg font-display font-semibold group-hover:text-primary transition-colors leading-snug">
+                        {project.title}
+                      </h3>
+                    </div>
+                    <p className="text-muted-foreground text-xs leading-relaxed line-clamp-4">
+                      {project.description}
+                    </p>
+                  </CardContent>
                 </div>
-                <CardContent className="pt-6 space-y-4">
-                  <h3 className="text-xl font-display font-semibold">{project.title}</h3>
-                  <p className="text-muted-foreground text-sm">{project.description}</p>
-                  <div className="flex flex-wrap gap-2">
+
+                <div className="px-6 pb-6 pt-2 space-y-4">
+                  <div className="flex flex-wrap gap-1.5">
                     {project.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
+                      <Badge key={tag} variant="secondary" className="text-[11px] font-normal">
                         {tag}
                       </Badge>
                     ))}
                   </div>
-                </CardContent>
+
+                  {(project.link || project.github || project.videoUrl) && (
+                    <div className="pt-2 border-t flex flex-wrap items-center gap-3">
+                      {project.link && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                          Visit Live Portal
+                        </a>
+                      )}
+                      {project.videoUrl && (
+                        <a
+                          href={project.videoUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-500 hover:text-amber-400 hover:underline"
+                        >
+                          <Play className="h-3.5 w-3.5 fill-current" />
+                          Watch Demo
+                        </a>
+                      )}
+                      {project.github && (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <Github className="h-3.5 w-3.5" />
+                          View Code on GitHub
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
               </Card>
             ))}
           </div>
