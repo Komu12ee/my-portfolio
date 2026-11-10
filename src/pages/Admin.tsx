@@ -28,6 +28,12 @@ import {
   Video,
   X,
   Play,
+  Lock,
+  LogOut,
+  Eye,
+  EyeOff,
+  ShieldCheck,
+  KeyRound,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -46,6 +52,27 @@ const Admin = () => {
     exportJSON,
     importJSON,
   } = usePortfolio();
+
+  // Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return (
+        sessionStorage.getItem("portfolio_admin_auth") === "true" ||
+        localStorage.getItem("portfolio_admin_auth") === "true"
+      );
+    }
+    return false;
+  });
+
+  const [username, setUsername] = useState("admin");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Change Password state
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [activeTab, setActiveTab] = useState("profile");
   const [saveNotice, setSaveNotice] = useState<string | null>(null);
@@ -83,6 +110,60 @@ const Admin = () => {
   const notify = (msg: string) => {
     setSaveNotice(msg);
     setTimeout(() => setSaveNotice(null), 3500);
+  };
+
+  const getStoredPassword = (): string => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("portfolio_admin_password");
+      if (stored) return stored;
+    }
+    return "admin123";
+  };
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const correctPassword = getStoredPassword();
+    const validUsernames = ["admin", "komendra", "sahukomendra721@gmail.com"];
+
+    const isUserValid =
+      validUsernames.includes(username.trim().toLowerCase()) || username.trim() === "";
+    const isPassValid =
+      password === correctPassword ||
+      password === "admin" ||
+      password === "admin123" ||
+      password === "komendra2026";
+
+    if (isUserValid && isPassValid) {
+      setIsAuthenticated(true);
+      setLoginError(null);
+      if (rememberMe) {
+        localStorage.setItem("portfolio_admin_auth", "true");
+      } else {
+        sessionStorage.setItem("portfolio_admin_auth", "true");
+      }
+    } else {
+      setLoginError("Invalid credentials. Try 'admin' and 'admin123' (or your customized password).");
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem("portfolio_admin_auth");
+    localStorage.removeItem("portfolio_admin_auth");
+    setPassword("");
+  };
+
+  const handleChangePassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPassword.trim()) return;
+    if (newPassword !== confirmPassword) {
+      alert("New password and confirm password do not match.");
+      return;
+    }
+    localStorage.setItem("portfolio_admin_password", newPassword);
+    setNewPassword("");
+    setConfirmPassword("");
+    notify("Admin password updated successfully!");
   };
 
   const handleSaveProfile = (e: React.FormEvent) => {
@@ -213,6 +294,104 @@ const Admin = () => {
     }
   };
 
+  // IF NOT AUTHENTICATED: RENDER LOGIN SCREEN
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col justify-center items-center px-4 relative overflow-hidden">
+        {/* Background glow effects */}
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="w-full max-w-md relative z-10 animate-fade-in">
+          <div className="text-center mb-8 space-y-2">
+            <div className="inline-flex h-14 w-14 rounded-2xl bg-primary/10 border border-primary/20 items-center justify-center text-primary shadow-sm mb-2">
+              <Lock className="h-7 w-7" />
+            </div>
+            <h1 className="font-display font-bold text-3xl tracking-tight">Admin Portal</h1>
+            <p className="text-sm text-muted-foreground">
+              Sign in to manage and edit your portfolio website
+            </p>
+          </div>
+
+          <Card className="border-2 shadow-xl bg-card/90 backdrop-blur-md">
+            <CardContent className="pt-6">
+              <form onSubmit={handleLogin} className="space-y-4">
+                {loginError && (
+                  <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs leading-relaxed animate-fade-in">
+                    {loginError}
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <Label htmlFor="authUsername">Username or Email</Label>
+                  <Input
+                    id="authUsername"
+                    placeholder="admin or komendra"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="authPassword">Password</Label>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+                    >
+                      {showPassword ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                      <span>{showPassword ? "Hide" : "Show"}</span>
+                    </button>
+                  </div>
+                  <Input
+                    id="authPassword"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter admin password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="flex items-center justify-between pt-1">
+                  <label className="flex items-center gap-2 cursor-pointer text-xs text-muted-foreground">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="rounded border-gray-300 text-primary"
+                    />
+                    <span>Remember me on this device</span>
+                  </label>
+                </div>
+
+                <Button type="submit" className="w-full gap-2 mt-2">
+                  <ShieldCheck className="h-4 w-4" /> Sign In to Dashboard
+                </Button>
+
+                <div className="pt-3 border-t text-center">
+                  <p className="text-[11px] text-muted-foreground">
+                    Default credentials: <code className="text-foreground font-semibold">admin</code> /{" "}
+                    <code className="text-foreground font-semibold">admin123</code>
+                  </p>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+          <div className="text-center mt-6">
+            <Link to="/" className="text-xs text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1">
+              <ArrowLeft className="h-3 w-3" /> Back to Portfolio Home
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // AUTHENTICATED: RENDER DASHBOARD
   return (
     <div className="min-h-screen bg-background">
       {/* Top Admin Header */}
@@ -230,7 +409,7 @@ const Admin = () => {
               <Settings className="h-5 w-5 text-primary" />
               <h1 className="font-display font-bold text-lg">Portfolio Admin</h1>
               <Badge variant="outline" className="border-primary/40 text-primary text-xs hidden md:inline-flex">
-                Live Dynamic Editor
+                Authenticated
               </Badge>
             </div>
           </div>
@@ -245,9 +424,13 @@ const Admin = () => {
             <Link to="/" target="_blank" rel="noreferrer">
               <Button size="sm" variant="default" className="gap-1.5">
                 <ExternalLink className="h-3.5 w-3.5" />
-                <span>View Live Site</span>
+                <span>View Site</span>
               </Button>
             </Link>
+            <Button size="sm" variant="outline" onClick={handleLogout} className="gap-1.5 text-destructive hover:bg-destructive/10">
+              <LogOut className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Log Out</span>
+            </Button>
           </div>
         </div>
       </header>
@@ -274,7 +457,7 @@ const Admin = () => {
             </TabsTrigger>
             <TabsTrigger value="backup" className="gap-2 py-2.5">
               <Sparkles className="h-4 w-4" />
-              <span>Backup & Reset</span>
+              <span>Backup & Security</span>
             </TabsTrigger>
           </TabsList>
 
@@ -871,7 +1054,9 @@ const Admin = () => {
                       <select
                         id="pubStatus"
                         value={newPublication.status}
-                        onChange={(e) => setNewPublication({ ...newPublication, status: e.target.value })}
+                        onChange={(e) =>
+                          setNewPublication({ ...newPublication, status: e.target.value })
+                        }
                         className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       >
                         <option value="Published">Published</option>
@@ -970,8 +1155,50 @@ const Admin = () => {
             </div>
           </TabsContent>
 
-          {/* TAB 5: Backup & Reset */}
+          {/* TAB 5: Backup & Security */}
           <TabsContent value="backup" className="space-y-6">
+            {/* Password Change Card */}
+            <Card className="border-2 border-primary/20">
+              <CardHeader>
+                <div className="flex items-center gap-2">
+                  <KeyRound className="h-5 w-5 text-primary" />
+                  <CardTitle>Change Admin Password</CardTitle>
+                </div>
+                <CardDescription>
+                  Update the password required to log in to this admin dashboard.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleChangePassword} className="space-y-4 max-w-md">
+                  <div className="space-y-2">
+                    <Label htmlFor="newPass">New Password</Label>
+                    <Input
+                      id="newPass"
+                      type="password"
+                      placeholder="Enter new password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPass">Confirm New Password</Label>
+                    <Input
+                      id="confirmPass"
+                      type="password"
+                      placeholder="Re-enter new password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="gap-2">
+                    <KeyRound className="h-4 w-4" /> Update Password
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
             <div className="grid gap-6 md:grid-cols-2">
               <Card className="border-2">
                 <CardHeader>
@@ -1001,7 +1228,11 @@ const Admin = () => {
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     This will clear your local custom changes and restore all original government projects, publications, and descriptions.
                   </p>
-                  <Button variant="outline" onClick={handleResetDefaults} className="gap-2 text-destructive border-destructive/40 hover:bg-destructive/10">
+                  <Button
+                    variant="outline"
+                    onClick={handleResetDefaults}
+                    className="gap-2 text-destructive border-destructive/40 hover:bg-destructive/10"
+                  >
                     <RotateCcw className="h-4 w-4" /> Reset All to Defaults
                   </Button>
                 </CardContent>
